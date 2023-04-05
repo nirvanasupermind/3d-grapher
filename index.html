@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>My first three.js app</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>3D grapher</h1>
+    <p>z = <input id="exp" placeholder="2*x + sin(y)^2"></input>
+    <p id="error"></p>
+    </p>
+    <button onclick="graph();"">Graph</button>
+        <script src=" ./three.min.js"></script>
+        <script src=" ./OrbitControls.js"></script>
+        <script src="./parsimmon.umd.min.js"></script>
+        <script src="./parser.js"></script>
+        <script src="./index.js"></script>
+</body>
+
+</html>

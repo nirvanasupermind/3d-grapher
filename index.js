@@ -15,20 +15,30 @@ const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
 var points = [];
+var pointCloud;
 
-function createPoint(x, y, z) {
-    const geometry = new THREE.SphereGeometry(0.02, 32, 16);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const point = new THREE.Mesh(geometry, material);
+// function createPoint(x, y, z) {
+//     const geometry = new THREE.SphereGeometry(0.02, 32, 16);
+//     const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+//     const point = new THREE.Mesh(geometry, material);
 
-    point.position.set(x, y, z);
-    scene.add(point);
-    points.push(point);
+//     point.position.set(x, y, z);
+//     scene.add(point);
+//     points.push(point);
 
-    point.cursor = "pointer";
-    // point.on("click", (ev) => {
-    //     alert(1);
-    // });
+//     point.cursor = "pointer";
+//     // point.on("click", (ev) => {
+//     //     alert(1);
+//     // });
+// }
+
+function makeArr(startValue, stopValue, cardinality) {
+    var arr = [];
+    var step = (stopValue - startValue) / (cardinality - 1);
+    for (var i = 0; i < cardinality; i++) {
+      arr.push(startValue + (step * i));
+    }
+    return arr;
 }
 
 function graph() {
@@ -37,14 +47,37 @@ function graph() {
 
     const exp = document.querySelector("#exp").value;
 
-    const xdata = Array(100).fill().map((_, i) => i * 0.2 - 10);
-    const ydata = Array(100).fill().map((_, i) => i * 0.2 - 10);
+    const xdata = makeArr(-10, 10, 200);
+    const ydata = makeArr(-10, 10, 200);
+    console.log(xdata);
 
     xdata.forEach((x) => {
         ydata.forEach((y) => {
             const z = evalMathExp(exp, x, y);
-            createPoint(x, y, z);
+            points.push(new THREE.Vector3(x, y, z));
         });
+        if(pointCloud) {
+        scene.remove(pointCloud);
+        }
+        // var geometry = new THREE.ConvexGeometry(points);
+        var geometry = new THREE.BufferGeometry();
+        var vertices = [];
+        for (var i = 0; i < points.length; i++) {
+            vertices.push(points[i].x);
+            vertices.push(points[i].y);
+            vertices.push(points[i].z);
+        }
+        geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(vertices), 3));
+
+        var material = new THREE.PointsMaterial({
+            color: "white",
+            size: 2,
+            sizeAttenuation: false
+        });
+        // var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        
+        pointCloud = new THREE.Mesh(geometry,material);
+        scene.add(pointCloud);
     });
 }
 

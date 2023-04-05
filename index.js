@@ -76,7 +76,7 @@ function graph() {
         });
         // var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
         
-        pointCloud = new THREE.Mesh(geometry,material);
+        pointCloud = new THREE.Points(geometry,material);
         scene.add(pointCloud);
     });
 }
